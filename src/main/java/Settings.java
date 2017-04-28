@@ -22,4 +22,8 @@ class Settings {
     static float INITIAL_TRUST = 1.0f;
     static char H_POLICY = 'i'; // m = min
     static char S_POLICY = 'i'; // i = iloczyn
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_CYAN = "\u001B[36m";
 }

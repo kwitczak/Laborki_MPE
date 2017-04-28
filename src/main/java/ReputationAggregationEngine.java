@@ -82,7 +82,6 @@ class ReputationAggregationEngine {
 
     void reportInteraction (int buyerId, int sellerId, float reportedValue) {
         reputationMeasure[sellerId][buyerId] = reportedValue;
-        System.out.println("kupujący " + buyerId + " zaraportował " + reportedValue + " o sprzedającym " + sellerId);
     }
 
     float getTrustMeasure(int id) {

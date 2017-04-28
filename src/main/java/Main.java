@@ -29,12 +29,12 @@ public class Main {
             // look for agents to interact, and do so
             for (Agent buyer : agents) {
                 for (Agent seller : agents) {
-                    if ( buyer.getId() != seller.getId() &&
-                            Settings.INTERACTION_RADIUS > Math.sqrt( Math.pow((double)(buyer.getX()-seller.getX()), 2) +
-                                    Math.pow((double)(buyer.getY()-seller.getY()), 2) ) ) {
-                        System.out.println("Interakcja pomiędzy " + buyer.getId() + " oraz " + seller.getId());
-                        buyer.interact(seller);
+                    if (buyer.getId() == seller.getId())
+                        continue;
 
+                    if (Settings.INTERACTION_RADIUS > buyer.distanceFrom(seller)) {
+                        System.out.println("------- Interakcja pomiędzy " + buyer.getId() + " oraz " + seller.getId() + " ---------");
+                        buyer.interact(seller);
                     }
                 }
             }

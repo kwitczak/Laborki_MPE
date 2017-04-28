@@ -1,10 +1,21 @@
 import java.util.Random;
 
 class Agent {
-    public enum Kind { STRATEGIC, HONEST }
+    public enum Kind {
+        STRATEGIC, HONEST;
+
+        @Override
+        public String toString() {
+            switch(this) {
+                case STRATEGIC: return Settings.ANSI_RED + "STRATEGIC" + Settings.ANSI_RESET;
+                case HONEST: return Settings.ANSI_CYAN + "HONEST" + Settings.ANSI_RESET;
+                default: throw new IllegalArgumentException();
+            }
+        }
+    }
 
     private static Random generator = new Random();
-    public static int numberOfStrategic = 0;
+    static int numberOfStrategic = 0;
     private static int iterator = 0;
 
     private int id;
@@ -30,6 +41,11 @@ class Agent {
         generateCommodity();
     }
 
+    double distanceFrom(Agent seller) {
+        return Math.sqrt(Math.pow((double) (getX() - seller.getX()), 2) +
+                Math.pow((double) (getY() - seller.getY()), 2));
+    }
+
     private int generateLocation() {
         return generator.nextInt(Settings.AGENTS_XY_LIMIT) + 1;
     }
@@ -51,59 +67,64 @@ class Agent {
 
     void interact(Agent seller) {
         rae.reportInteraction(
-                this.getId(),
+                getId(),
                 seller.getId(),
-                this.reportPurchase(
+                reportPurchase(
                         seller,
-                        seller.sellMeCommodity(this.getId(), this.getKind()) ));
+                        seller.sellMeCommodity(getId(), getKind())));
     }
 
     private float sellMeCommodity(int buyerId, Kind buyerKind) {
-    float p_threshold;
+        float p_threshold;
+        Kind sellerKind = getKind();
 
-    if (this.getKind() == Kind.STRATEGIC && buyerKind == Kind.STRATEGIC) { // yo wassup my homie!
-        p_threshold = 1;
+        if (sellerKind == Kind.STRATEGIC && buyerKind == Kind.STRATEGIC) { // yo wassup my homie!
+            p_threshold = 1;
+        } else if (sellerKind == Kind.STRATEGIC) { // i'm strategic U sucka!
+            p_threshold = Settings.STRATEGIC_Y;
+        } else { // how about a match of cricket, Johnson?
+            p_threshold = (rae.getTrustMeasure(buyerId) >= Settings.HONEST_X) ? Settings.HONEST_W : 0;
+        }
+
+        float soldCommodity = calculateCommodity(p_threshold, commodityAvailability[buyerId]);
+        System.out.println("Sprzedaję ja " + getId() + " rodzaju " + sellerKind + " ilość " + soldCommodity +
+                " kupującemu " + buyerId + " rodzaju " + buyerKind);
+
+        return soldCommodity; // P ij(t)
     }
-    else if (this.getKind() == Kind.STRATEGIC) { // i'm strategic U sucka!
-        p_threshold = Settings.STRATEGIC_Y;
-    }
-    else { // how about a match of cricket, Johnson?
-        if (rae.getTrustMeasure(buyerId) >= Settings.HONEST_X) p_threshold = Settings.HONEST_W;
-        else p_threshold = 0;
-    }
-    System.out.println("Sprzedaję ja " + this.getId() + " rodzaju " + this.getKind() + " ilość " + calculateCommodity(p_threshold, commodityAvailability[buyerId]) + " kupującemu " + buyerId + " rodzaju " + buyerKind);
-    return calculateCommodity(p_threshold, commodityAvailability[buyerId]); // P ij(t)
-}
 
     private float reportPurchase(Agent seller, float boughtCommodityAmount) {
         float r_threshold;
+        Kind buyerKind = getKind();
+        Kind sellerKind = seller.getKind();
 
-        if (this.getKind() == Kind.STRATEGIC && seller.getKind() == Kind.STRATEGIC) { // got blunt?
+        if (buyerKind == Kind.STRATEGIC && seller.getKind() == Kind.STRATEGIC) { // got blunt?
             r_threshold = 1;
-        }
-        else if (this.getKind() == Kind.STRATEGIC) { // you're in the wrooong neighbourhood, my man...
+        } else if (buyerKind == Kind.STRATEGIC) { // you're in the wrooong neighbourhood, my man...
             r_threshold = Settings.STRATEGIC_Z;
+        } else { // now he must be a swell fella, don't you think?
+            r_threshold = (rae.getTrustMeasure(seller.getId()) >= Settings.HONEST_X) ? Settings.HONEST_W : 0;
         }
-        else { // now he must be a swell fella, don't you think?
-            if (rae.getTrustMeasure(seller.getId()) >= Settings.HONEST_X) r_threshold = Settings.HONEST_W;
-            else r_threshold = 0;
-        }
-        return calculateCommodity(r_threshold, boughtCommodityAmount); // R ij(t)
+
+        float reportedCommodity = calculateCommodity(r_threshold, boughtCommodityAmount);
+        System.out.println("Raportuję ja " + getId() + " rodzaju " + buyerKind + " ilość " + reportedCommodity +
+                " sprzedającemu " + seller.getId() + " rodzaju " + sellerKind);
+        return reportedCommodity; // R ij(t)
     }
 
-    private float calculateCommodity (float tresh, float commodity) {
-        if (this.getKind() == Kind.STRATEGIC && Settings.S_POLICY == 'i') {
-            return tresh*commodity;
+    private float calculateCommodity(float p_threshold, float commodity) {
+        Kind sellerKind = getKind();
+
+        if (sellerKind == Kind.STRATEGIC && Settings.S_POLICY == 'i') {
+            return p_threshold * commodity;
+        } else if (sellerKind == Kind.STRATEGIC && Settings.S_POLICY == 'm') {
+            return Math.min(p_threshold, commodity);
+        } else if (sellerKind == Kind.HONEST && Settings.H_POLICY == 'i') {
+            return p_threshold * commodity;
+        } else if (sellerKind == Kind.HONEST && Settings.H_POLICY == 'm') {
+            return Math.min(p_threshold, commodity);
         }
-        else if (this.getKind() == Kind.STRATEGIC && Settings.S_POLICY == 'm') {
-            return Math.min(tresh, commodity);
-        }
-        else if (this.getKind() == Kind.HONEST && Settings.H_POLICY == 'i') {
-            return tresh*commodity;
-        }
-        else if (this.getKind() == Kind.HONEST && Settings.H_POLICY == 'm') {
-            return Math.min(tresh, commodity);
-        }
+
         System.out.println("Error when calculating commodity!");
         return 0;
     }
