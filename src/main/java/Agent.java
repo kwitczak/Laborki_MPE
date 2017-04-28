@@ -59,21 +59,21 @@ class Agent {
     }
 
     private float sellMeCommodity(int buyerId, Kind buyerKind) {
-        float p_threshold;
+    float p_threshold;
 
-        if (this.getKind() == Kind.STRATEGIC && buyerKind == Kind.STRATEGIC) { // yo wassup my homie!
-            p_threshold = 1;
-        }
-        else if (this.getKind() == Kind.STRATEGIC) { // i'm strategic U sucka!
-            p_threshold = Settings.STRATEGIC_Y;
-        }
-        else { // how about a match of cricket, Johnson?
-            if (rae.getTrustMeasure(buyerId) >= Settings.HONEST_X) p_threshold = Settings.HONEST_W;
-            else p_threshold = 0;
-        }
-        System.out.println("Sprzedaję ja " + this.getId() + " rodzaju " + this.getKind() + " ilość " + p_threshold*commodityAvailability[buyerId] + " kupującemu " + buyerId + " rodzaju " + buyerKind);
-        return p_threshold*commodityAvailability[buyerId]; // P ij(t)
+    if (this.getKind() == Kind.STRATEGIC && buyerKind == Kind.STRATEGIC) { // yo wassup my homie!
+        p_threshold = 1;
     }
+    else if (this.getKind() == Kind.STRATEGIC) { // i'm strategic U sucka!
+        p_threshold = Settings.STRATEGIC_Y;
+    }
+    else { // how about a match of cricket, Johnson?
+        if (rae.getTrustMeasure(buyerId) >= Settings.HONEST_X) p_threshold = Settings.HONEST_W;
+        else p_threshold = 0;
+    }
+    System.out.println("Sprzedaję ja " + this.getId() + " rodzaju " + this.getKind() + " ilość " + calculateCommodity(p_threshold, commodityAvailability[buyerId]) + " kupującemu " + buyerId + " rodzaju " + buyerKind);
+    return calculateCommodity(p_threshold, commodityAvailability[buyerId]); // P ij(t)
+}
 
     private float reportPurchase(Agent seller, float boughtCommodityAmount) {
         float r_threshold;
@@ -88,7 +88,24 @@ class Agent {
             if (rae.getTrustMeasure(seller.getId()) >= Settings.HONEST_X) r_threshold = Settings.HONEST_W;
             else r_threshold = 0;
         }
-        return r_threshold*boughtCommodityAmount; // R ij(t)
+        return calculateCommodity(r_threshold, boughtCommodityAmount); // R ij(t)
+    }
+
+    private float calculateCommodity (float tresh, float commodity) {
+        if (this.getKind() == Kind.STRATEGIC && Settings.S_POLICY == 'i') {
+            return tresh*commodity;
+        }
+        else if (this.getKind() == Kind.STRATEGIC && Settings.S_POLICY == 'm') {
+            return Math.min(tresh, commodity);
+        }
+        else if (this.getKind() == Kind.HONEST && Settings.H_POLICY == 'i') {
+            return tresh*commodity;
+        }
+        else if (this.getKind() == Kind.HONEST && Settings.H_POLICY == 'm') {
+            return Math.min(tresh, commodity);
+        }
+        System.out.println("Error when calculating commodity!");
+        return 0;
     }
 
     int getId() {return id;}

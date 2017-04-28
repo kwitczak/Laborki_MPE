@@ -91,6 +91,7 @@ class ReputationAggregationEngine {
 
     // chart purposes
     float[] getWholeTrust() {return trustMeasure;}
+    float[] getWholeReputation() {return reputationAvg;}
     float getHighTrust() {return highTrust;}
     float getLowTrust() {return lowTrust;}
 
