@@ -1,10 +1,13 @@
+import org.jfree.ui.RefineryUtilities;
+
 import java.util.Arrays;
 
 public class Main {
+    public static Agent[] agents;
     public static void main(String args[]) throws InterruptedException {
 
         // PREPARE BEFORE ITERATION BEGINS
-        Agent[] agents = new Agent[Settings.AGENTS_NUMBER];
+        agents = new Agent[Settings.AGENTS_NUMBER];
         ReputationAggregationEngine rae = ReputationAggregationEngine.getInstance();
         for (int i = 0; i < agents.length; i++)
             agents[i] = new Agent();
@@ -47,6 +50,7 @@ public class Main {
         }
 
         // after finish
+        // print log table
         for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
             System.out.print(agents[i].getKind() + ": ");
             for (int j = 0; j < Settings.NUMBER_OF_ITERATIONS; j++) {
@@ -54,5 +58,15 @@ public class Main {
             }
             System.out.println();
         }
+
+        // draw trust shitty chart
+        TrustChart chart = new TrustChart(
+                "Trust Chart" ,
+                "Trust changes per iteration",
+                trustMeasureHistory);
+
+        chart.pack( );
+        RefineryUtilities.centerFrameOnScreen( chart );
+        chart.setVisible( true );
     }
 }

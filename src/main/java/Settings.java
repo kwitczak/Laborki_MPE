@@ -3,7 +3,7 @@ import java.awt.*;
 class Settings {
     static int AGENTS_NUMBER = 100;
     static double STRATEGIC_PERCENTAGE = 0.3;
-    static int NUMBER_OF_ITERATIONS = 10;
+    static int NUMBER_OF_ITERATIONS = 25;
     static int PAUSE_BETWEEN_ITERATIONS = 100;
     static double INTERACTION_RADIUS = 50;
 
@@ -19,5 +19,5 @@ class Settings {
     static int AGENTS_CHART_SIZE_X = 500;
     static int AGENTS_CHART_SIZE_Y = 500;
 
-    static float INITIAL_TRUST = 0.5f;
+    static float INITIAL_TRUST = 0.6f;
 }

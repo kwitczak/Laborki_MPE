@@ -4,7 +4,7 @@ class Agent {
     public enum Kind { STRATEGIC, HONEST }
 
     private static Random generator = new Random();
-    private static int numberOfStrategic = 0;
+    public static int numberOfStrategic = 0;
     private static int iterator = 0;
 
     private int id;
