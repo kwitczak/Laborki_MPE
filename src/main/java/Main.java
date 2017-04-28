@@ -1,10 +1,9 @@
-import java.util.Set;
-
 public class Main {
     public static void main(String args[]) throws InterruptedException {
 
         // PREPARE BEFORE ITERATION BEGINS
         Agent[] agents = new Agent[Settings.AGENTS_NUMBER];
+        ReputationAggregationEngine rae = ReputationAggregationEngine.getInstance();
         for (int i = 0; i < agents.length; i++)
             agents[i] = new Agent();
 
@@ -28,7 +27,7 @@ public class Main {
                     if ( buyer.getId() != seller.getId() &&
                             Settings.INTERACTION_RADIUS > Math.sqrt( Math.pow((double)(buyer.getX()-seller.getX()), 2) +
                                     Math.pow((double)(buyer.getY()-seller.getY()), 2) ) ) {
-                        //System.out.println("Interakcja pomiędzy " + buyer.getId() + " oraz " + seller.getId());
+                        System.out.println("Interakcja pomiędzy " + buyer.getId() + " oraz " + seller.getId());
                         buyer.interact(seller);
 
                     }
@@ -38,7 +37,8 @@ public class Main {
             agentsChart.refresh();
 
             // history of trust
-            trustMeasureHistory[i] = Agent.rae.getWholeTrust();
+            rae.recalculateTrustMeasures(i);
+            trustMeasureHistory[i] = rae.getWholeTrust();
         }
 
         // after finish

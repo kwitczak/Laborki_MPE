@@ -1,6 +1,6 @@
 import java.util.Random;
 
-public class Agent {
+class Agent {
     public enum Kind { STRATEGIC, HONEST }
 
     private static Random generator = new Random();
@@ -12,7 +12,7 @@ public class Agent {
     private int y;
     private Kind kind;
 
-    static ReputationAggregationEngine rae;
+    private ReputationAggregationEngine rae = ReputationAggregationEngine.getInstance();
 
     private float[] commodityAvailability = new float[Settings.AGENTS_NUMBER]; // A ij(t)
 
@@ -20,12 +20,13 @@ public class Agent {
         relocate();
         this.kind = generateKind();
         this.id = iterator++;
-        rae = new ReputationAggregationEngine();
     }
 
     void relocate() {
         this.x = generateLocation();
         this.y = generateLocation();
+
+        // Each agent has different set of commodities for other agents
         generateCommodity();
     }
 
@@ -34,7 +35,8 @@ public class Agent {
     }
 
     private void generateCommodity() {
-        for (int i = 0; i < Settings.AGENTS_NUMBER; i++) commodityAvailability[i] = generator.nextFloat();
+        for (int i = 0; i < Settings.AGENTS_NUMBER; i++)
+            commodityAvailability[i] = generator.nextFloat();
     }
 
     private Kind generateKind() {
@@ -56,7 +58,7 @@ public class Agent {
                         seller.sellMeCommodity(this.getId(), this.getKind()) ));
     }
 
-    float sellMeCommodity(int buyerId, Kind buyerKind) {
+    private float sellMeCommodity(int buyerId, Kind buyerKind) {
         float p_threshold;
 
         if (this.getKind() == Kind.STRATEGIC && buyerKind == Kind.STRATEGIC) { // yo wassup my homie!
@@ -72,7 +74,7 @@ public class Agent {
         return p_threshold*commodityAvailability[buyerId]; // P ij(t)
     }
 
-    float reportPurchase(Agent seller, float boughtCommodityAmount) {
+    private float reportPurchase(Agent seller, float boughtCommodityAmount) {
         float r_threshold;
 
         if (this.getKind() == Kind.STRATEGIC && seller.getKind() == Kind.STRATEGIC) { // got blunt?
@@ -98,7 +100,7 @@ public class Agent {
         return y;
     }
 
-    public Kind getKind() {
+    Kind getKind() {
         return kind;
     }
 }

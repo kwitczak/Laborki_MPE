@@ -1,10 +1,29 @@
-public class ReputationAggregationEngine {
+import java.util.Arrays;
+
+class ReputationAggregationEngine {
 
     private float[][] reputationMeasure = new float [Settings.AGENTS_NUMBER][Settings.AGENTS_NUMBER];
     private float[] reputationAvg = new float [Settings.AGENTS_NUMBER];
     private float[] trustMeasure = new float [Settings.AGENTS_NUMBER];
     private float highTrust = 1;
     private float lowTrust = 1;
+
+    private static ReputationAggregationEngine instance = null;
+
+    public static ReputationAggregationEngine getInstance() {
+        if(instance == null) {
+            instance = new ReputationAggregationEngine();
+        }
+        return instance;
+    }
+
+    ReputationAggregationEngine () {
+        for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
+            trustMeasure[i] = Settings.INITIAL_TRUST;
+        }
+
+        System.out.println( Arrays.toString(trustMeasure));
+    }
 
     // recalculating trust measures based on reputation data
     void recalculateTrustMeasures(int currentIteration) {
