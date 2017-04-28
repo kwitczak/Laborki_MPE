@@ -3,7 +3,8 @@ import org.jfree.ui.RefineryUtilities;
 import java.util.Arrays;
 
 public class Main {
-    public static Agent[] agents;
+    static Agent[] agents;
+
     public static void main(String args[]) throws InterruptedException {
 
         // PREPARE BEFORE ITERATION BEGINS
@@ -45,7 +46,7 @@ public class Main {
             // history of trust
             rae.recalculateTrustMeasures(i);
             trustMeasureHistory[i] = rae.getWholeTrust();
-            System.out.print( Arrays.toString(rae.getWholeReputation()) );
+            System.out.print(Arrays.toString(rae.getWholeReputation()));
             System.out.println("\n##################################################\n");
         }
 
@@ -61,12 +62,12 @@ public class Main {
 
         // draw trust shitty chart
         TrustChart chart = new TrustChart(
-                "Trust Chart" ,
+                "Trust Chart",
                 "Trust changes per iteration",
                 trustMeasureHistory);
 
-        chart.pack( );
-        RefineryUtilities.centerFrameOnScreen( chart );
-        chart.setVisible( true );
+        chart.pack();
+        RefineryUtilities.centerFrameOnScreen(chart);
+        chart.setVisible(true);
     }
 }

@@ -6,10 +6,13 @@ class Agent {
 
         @Override
         public String toString() {
-            switch(this) {
-                case STRATEGIC: return Settings.ANSI_RED + "STRATEGIC" + Settings.ANSI_RESET;
-                case HONEST: return Settings.ANSI_CYAN + "HONEST" + Settings.ANSI_RESET;
-                default: throw new IllegalArgumentException();
+            switch (this) {
+                case STRATEGIC:
+                    return Settings.ANSI_RED + "STRATEGIC" + Settings.ANSI_RESET;
+                case HONEST:
+                    return Settings.ANSI_CYAN + "HONEST" + Settings.ANSI_RESET;
+                default:
+                    throw new IllegalArgumentException();
             }
         }
     }
@@ -58,7 +61,7 @@ class Agent {
     private Kind generateKind() {
         boolean canBeStrategic = numberOfStrategic < Settings.AGENTS_NUMBER * Settings.STRATEGIC_PERCENTAGE;
         if (canBeStrategic) {
-            numberOfStrategic ++;
+            numberOfStrategic++;
             return Kind.STRATEGIC;
         } else {
             return Kind.HONEST;
@@ -129,7 +132,9 @@ class Agent {
         return 0;
     }
 
-    int getId() {return id;}
+    int getId() {
+        return id;
+    }
 
     int getX() {
         return x;

@@ -2,46 +2,51 @@ import java.util.Arrays;
 
 class ReputationAggregationEngine {
 
-    private float[][] reputationMeasure = new float [Settings.AGENTS_NUMBER][Settings.AGENTS_NUMBER];
-    private float[] reputationAvg = new float [Settings.AGENTS_NUMBER];
-    private float[] trustMeasure = new float [Settings.AGENTS_NUMBER];
+    private float[][] reputationMeasure = new float[Settings.AGENTS_NUMBER][Settings.AGENTS_NUMBER];
+    private float[] reputationAvg = new float[Settings.AGENTS_NUMBER];
+    private float[] trustMeasure = new float[Settings.AGENTS_NUMBER];
     private float highTrust = 1;
     private float lowTrust = 1;
 
     private static ReputationAggregationEngine instance = null;
 
-    public static ReputationAggregationEngine getInstance() {
-        if(instance == null) {
+    static ReputationAggregationEngine getInstance() {
+        if (instance == null) {
             instance = new ReputationAggregationEngine();
         }
         return instance;
     }
 
-    ReputationAggregationEngine () {
-        for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
-            trustMeasure[i] = Settings.INITIAL_TRUST;
+    private ReputationAggregationEngine() {
+        for (int agentID = 0; agentID < Settings.AGENTS_NUMBER; agentID++) {
+            trustMeasure[agentID] = Settings.INITIAL_TRUST;
         }
 
-        System.out.println( Arrays.toString(trustMeasure));
+        System.out.println(Arrays.toString(trustMeasure));
     }
 
     // recalculating trust measures based on reputation data
     void recalculateTrustMeasures(int currentIteration) {
-        float[] newReputation = new float [Settings.AGENTS_NUMBER];
+        float[] newReputation = new float[Settings.AGENTS_NUMBER];
         int howManyInteracted;
 
-        // reputation recalculation
-        for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
+        // reputation recalculation: sellerID - i, buyerID - j
+        for (int sellerID = 0; sellerID < Settings.AGENTS_NUMBER; sellerID++) {
             howManyInteracted = 0;
-            for (int j=0; j < Settings.AGENTS_NUMBER; j++) {
-                if (i != j && reputationMeasure[i][j] != 0) {
+
+            for (int buyerID = 0; buyerID < Settings.AGENTS_NUMBER; buyerID++) {
+                if (sellerID == buyerID)
+                    continue;
+
+                if (reputationMeasure[sellerID][buyerID] != 0) {
                     howManyInteracted++;
-                    newReputation[i] += (trustMeasure[j]*reputationMeasure[i][j]);
+                    newReputation[sellerID] += (trustMeasure[buyerID] * reputationMeasure[sellerID][buyerID]);
                 }
             }
-            //System.out.println("howManyInteracted: " + howManyInteracted);
-            if (howManyInteracted > 0) newReputation[i] /= howManyInteracted;
-            else newReputation[i] = Settings.INITIAL_TRUST;
+
+            newReputation[sellerID] = (howManyInteracted > 0) ? newReputation[sellerID] / howManyInteracted : Settings.INITIAL_TRUST;
+            System.out.println("Seller " + sellerID + " interacted with " + howManyInteracted +
+                    " agents, ending with reputation: " + newReputation[sellerID]);
         }
 
         this.reputationAvg = newReputation; //R i,avg(t)
@@ -49,8 +54,8 @@ class ReputationAggregationEngine {
 
         // clusterization method ?avg. of all?
         float clusterizationThreshold = 0;
-        for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
-            clusterizationThreshold += reputationAvg[i];
+        for (int agentID = 0; agentID < Settings.AGENTS_NUMBER; agentID++) {
+            clusterizationThreshold += reputationAvg[agentID];
         }
         clusterizationThreshold /= Settings.AGENTS_NUMBER;
 
@@ -58,12 +63,11 @@ class ReputationAggregationEngine {
         float highAverage = 0;
         float lowAverage = 0;
         int highCount = 0, lowCount = 0;
-        for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
+        for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
             if (reputationAvg[i] >= clusterizationThreshold) {
                 highAverage += reputationAvg[i];
                 highCount++;
-            }
-            else {
+            } else {
                 lowAverage += reputationAvg[i];
                 lowCount++;
             }
@@ -74,13 +78,13 @@ class ReputationAggregationEngine {
         // highTrust = highAverage / highAverage; // = 1
 
         // checking if agent in high or low trust group
-        for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
+        for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
             if (reputationAvg[i] >= clusterizationThreshold) trustMeasure[i] = highTrust;
             else trustMeasure[i] = lowTrust;
         }
     }
 
-    void reportInteraction (int buyerId, int sellerId, float reportedValue) {
+    void reportInteraction(int buyerId, int sellerId, float reportedValue) {
         reputationMeasure[sellerId][buyerId] = reportedValue;
     }
 
@@ -89,9 +93,20 @@ class ReputationAggregationEngine {
     }
 
     // chart purposes
-    float[] getWholeTrust() {return trustMeasure;}
-    float[] getWholeReputation() {return reputationAvg;}
-    float getHighTrust() {return highTrust;}
-    float getLowTrust() {return lowTrust;}
+    float[] getWholeTrust() {
+        return trustMeasure;
+    }
+
+    float[] getWholeReputation() {
+        return reputationAvg;
+    }
+
+    float getHighTrust() {
+        return highTrust;
+    }
+
+    float getLowTrust() {
+        return lowTrust;
+    }
 
 }

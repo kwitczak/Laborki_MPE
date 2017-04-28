@@ -11,19 +11,19 @@ class TrustChart extends ApplicationFrame {
         super(applicationTitle);
         JFreeChart lineChart = ChartFactory.createLineChart(
                 chartTitle,
-                "Iterations","Trust",
+                "Iterations", "Trust",
                 createDataset(trustHistory),
                 PlotOrientation.VERTICAL,
-                true,true,false);
+                true, true, false);
 
-        ChartPanel chartPanel = new ChartPanel( lineChart );
-        chartPanel.setPreferredSize( new java.awt.Dimension( 800 , 800 ) );
-        setContentPane( chartPanel );
+        ChartPanel chartPanel = new ChartPanel(lineChart);
+        chartPanel.setPreferredSize(new java.awt.Dimension(800, 800));
+        setContentPane(chartPanel);
     }
 
     private DefaultCategoryDataset createDataset(float[][] trustHistory) {
 
-        DefaultCategoryDataset dataset = new DefaultCategoryDataset( );
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
         for (int iteration = 0; iteration < Settings.NUMBER_OF_ITERATIONS; iteration++) {
             float sumStrategic = 0;
             float sumHonest = 0;
@@ -39,11 +39,11 @@ class TrustChart extends ApplicationFrame {
                 }
             }
 
-            float averageStrategicForIteration = sumStrategic/Agent.numberOfStrategic;
-            float averageHonestForIteration = sumHonest/(Settings.AGENTS_NUMBER - Agent.numberOfStrategic);
+            float averageStrategicForIteration = sumStrategic / Agent.numberOfStrategic;
+            float averageHonestForIteration = sumHonest / (Settings.AGENTS_NUMBER - Agent.numberOfStrategic);
 
-            dataset.addValue(averageStrategicForIteration , "Strategic" , Integer.toString(iteration + 1) );
-            dataset.addValue(averageHonestForIteration , "Honest" , Integer.toString(iteration + 1) );
+            dataset.addValue(averageStrategicForIteration, "Strategic", Integer.toString(iteration + 1));
+            dataset.addValue(averageHonestForIteration, "Honest", Integer.toString(iteration + 1));
         }
 
         return dataset;
