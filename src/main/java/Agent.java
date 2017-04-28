@@ -71,6 +71,7 @@ class Agent {
             if (rae.getTrustMeasure(buyerId) >= Settings.HONEST_X) p_threshold = Settings.HONEST_W;
             else p_threshold = 0;
         }
+        System.out.println("Sprzedaję ja " + this.getId() + " rodzaju " + this.getKind() + " ilość " + p_threshold*commodityAvailability[buyerId] + " kupującemu " + buyerId + " rodzaju " + buyerKind);
         return p_threshold*commodityAvailability[buyerId]; // P ij(t)
     }
 

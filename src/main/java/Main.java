@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class Main {
     public static void main(String args[]) throws InterruptedException {
 
@@ -35,14 +37,18 @@ public class Main {
             }
 
             agentsChart.refresh();
+            System.out.println("\n##########");
 
             // history of trust
             rae.recalculateTrustMeasures(i);
             trustMeasureHistory[i] = rae.getWholeTrust();
+            System.out.print( Arrays.toString(trustMeasureHistory[i]) );
+            System.out.println("\n##################################################\n");
         }
 
         // after finish
         for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
+            System.out.print(agents[i].getKind() + ": ");
             for (int j = 0; j < Settings.NUMBER_OF_ITERATIONS; j++) {
                 System.out.print(trustMeasureHistory[j][i] + " ");
             }

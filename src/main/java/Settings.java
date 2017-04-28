@@ -8,7 +8,7 @@ class Settings {
     static double INTERACTION_RADIUS = 50;
 
     static float HONEST_W = 1;
-    static float HONEST_X = 1;
+    static float HONEST_X = 0.5f;
     static float STRATEGIC_Z = 1;
     static float STRATEGIC_Y = 1;
 

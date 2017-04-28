@@ -39,10 +39,13 @@ class ReputationAggregationEngine {
                     newReputation[i] += (trustMeasure[j]*reputationMeasure[i][j]);
                 }
             }
-            newReputation[i] /= howManyInteracted;
+            //System.out.println("howManyInteracted: " + howManyInteracted);
+            if (howManyInteracted > 0) newReputation[i] /= howManyInteracted;
+            else newReputation[i] = Settings.INITIAL_TRUST;
         }
 
         this.reputationAvg = newReputation; //R i,avg(t)
+        //System.out.println("reputationAvg: " + Arrays.toString(reputationAvg));
 
         // clusterization method ?avg. of all?
         float clusterizationThreshold = 0;
@@ -79,6 +82,7 @@ class ReputationAggregationEngine {
 
     void reportInteraction (int buyerId, int sellerId, float reportedValue) {
         reputationMeasure[sellerId][buyerId] = reportedValue;
+        System.out.println("kupujący " + buyerId + " zaraportował " + reportedValue + " o sprzedającym " + sellerId);
     }
 
     float getTrustMeasure(int id) {
