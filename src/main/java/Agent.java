@@ -90,8 +90,8 @@ class Agent {
         }
 
         float soldCommodity = calculateCommodity(p_threshold, commodityAvailability[buyerId]);
-        System.out.println("Sprzedaję ja " + getId() + " rodzaju " + sellerKind + " ilość " + soldCommodity +
-                " kupującemu " + buyerId + " rodzaju " + buyerKind);
+//        System.out.println("Sprzedaję ja " + getId() + " rodzaju " + sellerKind + " ilość " + soldCommodity +
+//                " kupującemu " + buyerId + " rodzaju " + buyerKind);
 
         return soldCommodity; // P ij(t)
     }
@@ -112,8 +112,8 @@ class Agent {
         float reportedCommodity = calculateCommodity(r_threshold, boughtCommodityAmount);
         float percentageOfWhatIWanted = boughtCommodityAmount == 0 ? 1 : reportedCommodity/boughtCommodityAmount;
 
-        System.out.println("Raportuję ja " + getId() + " rodzaju " + buyerKind + " ilość " + reportedCommodity + "( " + percentageOfWhatIWanted + " )" +
-                " sprzedającemu " + seller.getId() + " rodzaju " + sellerKind);
+//        System.out.println("Raportuję ja " + getId() + " rodzaju " + buyerKind + " ilość " + reportedCommodity + "( " + percentageOfWhatIWanted + " )" +
+//                " sprzedającemu " + seller.getId() + " rodzaju " + sellerKind);
         return reportedCommodity; // R ij(t)
     }
 

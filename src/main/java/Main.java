@@ -34,7 +34,7 @@ public class Main {
                         continue;
 
                     if (Settings.INTERACTION_RADIUS > buyer.distanceFrom(seller)) {
-                        System.out.println("------- Interakcja pomiędzy " + buyer.getId() + " oraz " + seller.getId() + " ---------");
+//                        System.out.println("------- Interakcja pomiędzy " + buyer.getId() + " oraz " + seller.getId() + " ---------");
                         buyer.interact(seller);
                     }
                 }

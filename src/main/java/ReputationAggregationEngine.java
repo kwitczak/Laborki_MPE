@@ -46,19 +46,22 @@ class ReputationAggregationEngine {
 
             //System.out.println(howManyInteracted);
             newReputation[sellerID] = (howManyInteracted > 0) ? newReputation[sellerID] / howManyInteracted : Settings.INITIAL_TRUST;
-            System.out.println("(" + Main.agents[sellerID].getKind() + ") Seller " + sellerID + " interacted with " + howManyInteracted +
-                    " agents, ending with reputation: " + newReputation[sellerID]);
+//            System.out.println("(" + Main.agents[sellerID].getKind() + ") Seller " + sellerID + " interacted with " + howManyInteracted +
+//                    " agents, ending with reputation: " + newReputation[sellerID]);
         }
 
         this.reputationAvg = newReputation; //R i,avg(t)
         //System.out.println("reputationAvg: " + Arrays.toString(reputationAvg));
 
-        // clusterization method ?avg. of all?
-        float clusterizationThreshold = 0;
-        for (int agentID = 0; agentID < Settings.AGENTS_NUMBER; agentID++) {
-            clusterizationThreshold += reputationAvg[agentID];
-        }
-        clusterizationThreshold /= Settings.AGENTS_NUMBER;
+        // clusterization method: ?avg. of all?
+//        float clusterizationThreshold = 0;
+//        for (int agentID = 0; agentID < Settings.AGENTS_NUMBER; agentID++) {
+//            clusterizationThreshold += reputationAvg[agentID];
+//        }
+//        clusterizationThreshold /= Settings.AGENTS_NUMBER;
+
+        // clusterization method: k-means
+        float clusterizationThreshold = kmeansClusterization(reputationAvg);
 
         // recalculating trust levels
         float highAverage = 0;
@@ -78,9 +81,9 @@ class ReputationAggregationEngine {
         lowTrust = lowAverage / highAverage;
         // highTrust = highAverage / highAverage; // = 1
 
-//        System.out.println("clusterizationThreshold: " + clusterizationThreshold );
-//        System.out.println("highTrust: " + highTrust );
-//        System.out.println("lowTrust: " + lowTrust );
+        System.out.println("clusterizationThreshold: " + clusterizationThreshold );
+        System.out.println("highTrust: " + highTrust );
+        System.out.println("lowTrust: " + lowTrust );
         // checking if agent in high or low trust group
         for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
 //            System.out.println("reputation avg: " + reputationAvg[i] );
@@ -92,6 +95,52 @@ class ReputationAggregationEngine {
 
 //            System.out.println("received trust: " +  trustMeasure[i]);
         }
+    }
+
+    //clusterization using k-means method
+    float kmeansClusterization(float[] reputationAvg) {
+        float centerHigh = 0, centerLow = 1;
+        for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
+            if (reputationAvg[i] > centerHigh) centerHigh = reputationAvg[i]; //max value from array
+            if (reputationAvg[i] < centerLow) centerLow = reputationAvg[i]; //min value from array
+        }
+        boolean wasChange = true;
+        boolean[] whereDoIBelong = new boolean[Settings.AGENTS_NUMBER];
+        float highMean = 0, lowMean = 0;
+        int howManyHigh = 0, howManyLow = 0;
+        Arrays.fill(whereDoIBelong, false); //initialize with everyone in LOW group
+
+        while (wasChange) {
+            wasChange = false;
+            highMean = 0;
+            lowMean = 0;
+            howManyHigh = 0;
+            howManyLow = 0;
+            for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
+                if ( Math.abs(centerHigh-reputationAvg[i]) > Math.abs(centerLow-reputationAvg[i]) ){
+                    lowMean += reputationAvg[i];
+                    howManyLow++;
+                    if (whereDoIBelong[i]) {
+                        wasChange = true; //if was high, now is low
+                        whereDoIBelong[i] = false; //now i belong to LOW
+                    }
+                }
+                else {
+                    highMean += reputationAvg[i];
+                    howManyHigh++;
+                    if (!whereDoIBelong[i]) {
+                        wasChange = true; //if was low, now is high
+                        whereDoIBelong[i] = true; //now i belong to HIGH
+                    }
+                }
+            }
+            centerHigh = highMean/howManyHigh; //mean for high cluster
+            centerLow = lowMean/howManyLow; //mean for low cluster
+//            System.out.println("CenterHigh: " + centerHigh + ", howManyHigh: " + howManyHigh);
+//            System.out.println("CenterLow: " + centerLow + ", howManyLow: " + howManyLow);
+        }
+
+        return ((centerHigh + centerLow) /2); //half way between high mean and low mean
     }
 
     void reportInteraction(int buyerId, int sellerId, float reportedValue) {

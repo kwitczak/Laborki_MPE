@@ -1,13 +1,13 @@
 import java.awt.*;
 
 class Settings {
-    static int AGENTS_NUMBER = 1000;
+    static int AGENTS_NUMBER = 100;
     static double STRATEGIC_PERCENTAGE = 0.3;
-    static int NUMBER_OF_ITERATIONS = 200;
+    static int NUMBER_OF_ITERATIONS = 100;
     static int PAUSE_BETWEEN_ITERATIONS = 50;
-    static double INTERACTION_RADIUS = 50;
+    static double INTERACTION_RADIUS = 150;
 
-    static float HONEST_W = 1f; //po co to obniżać poniżej 1? konkurencja z innymi HONEST?
+    static float HONEST_W = 0.6f; //po co to obniżać poniżej 1? konkurencja z innymi HONEST?
     static float HONEST_X = 0.5f;
     static float STRATEGIC_Z = 0.4f;
     static float STRATEGIC_Y = 1f; //po co to obniżać?
