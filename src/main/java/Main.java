@@ -47,7 +47,7 @@ public class Main {
             rae.recalculateTrustMeasures(i);
             trustMeasureHistory[i] = rae.getWholeTrust();
             System.out.print(Arrays.toString(rae.getWholeReputation()));
-            System.out.println("\n##################################################\n");
+            System.out.println("\n####################### koniec iteracji " + (i + 1) + " ######################\n");
         }
 
         // after finish
