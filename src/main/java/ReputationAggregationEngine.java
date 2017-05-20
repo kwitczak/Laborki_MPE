@@ -78,19 +78,19 @@ class ReputationAggregationEngine {
         lowTrust = lowAverage / highAverage;
         // highTrust = highAverage / highAverage; // = 1
 
-        System.out.println("clusterizationThreshold: " + clusterizationThreshold );
-        System.out.println("highTrust: " + highTrust );
-        System.out.println("lowTrust: " + lowTrust );
+//        System.out.println("clusterizationThreshold: " + clusterizationThreshold );
+//        System.out.println("highTrust: " + highTrust );
+//        System.out.println("lowTrust: " + lowTrust );
         // checking if agent in high or low trust group
         for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
-            System.out.println("reputation avg: " + reputationAvg[i] );
+//            System.out.println("reputation avg: " + reputationAvg[i] );
             if (reputationAvg[i] >= clusterizationThreshold) {
                 trustMeasure[i] = highTrust;
             } else {
                 trustMeasure[i] = lowTrust;
             }
 
-            System.out.println("received trust: " +  trustMeasure[i]);
+//            System.out.println("received trust: " +  trustMeasure[i]);
         }
     }
 

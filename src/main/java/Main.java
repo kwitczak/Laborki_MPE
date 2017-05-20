@@ -21,7 +21,7 @@ public class Main {
 
         // START ITERATION
         for (int i = 0; i < Settings.NUMBER_OF_ITERATIONS; i++) {
-            Thread.sleep(Settings.PAUSE_BETWEEN_ITERATIONS);
+//            Thread.sleep(Settings.PAUSE_BETWEEN_ITERATIONS);
 
             // change position and commodity availability
             for (Agent agent : agents)
@@ -40,7 +40,7 @@ public class Main {
                 }
             }
 
-            agentsChart.refresh();
+//            agentsChart.refresh();
             System.out.println("\n##########");
 
             // history of trust
