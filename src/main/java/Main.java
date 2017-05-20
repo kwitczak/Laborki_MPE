@@ -45,17 +45,18 @@ public class Main {
 
             // history of trust
             rae.recalculateTrustMeasures(i);
-            trustMeasureHistory[i] = rae.getWholeTrust();
-            System.out.print(Arrays.toString(rae.getWholeReputation()));
+            trustMeasureHistory[i] = rae.getWholeTrust().clone();
+            System.out.println("Reputations: " + Arrays.toString(rae.getWholeReputation()));
+            System.out.println("Trusts: " + Arrays.toString(rae.getWholeTrust()));
             System.out.println("\n####################### koniec iteracji " + (i + 1) + " ######################\n");
         }
 
         // after finish
         // print log table
-        for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
-            System.out.print(agents[i].getKind() + ": ");
-            for (int j = 0; j < Settings.NUMBER_OF_ITERATIONS; j++) {
-                System.out.print(trustMeasureHistory[j][i] + " ");
+        for (int agentID = 0; agentID < Settings.AGENTS_NUMBER; agentID++) {
+            System.out.print(agents[agentID].getKind() + ": ");
+            for (int iteration = 0; iteration < Settings.NUMBER_OF_ITERATIONS; iteration++) {
+                System.out.print(trustMeasureHistory[iteration][agentID] + " ");
             }
             System.out.println();
         }

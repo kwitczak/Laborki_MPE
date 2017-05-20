@@ -1,9 +1,9 @@
 import java.awt.*;
 
 class Settings {
-    static int AGENTS_NUMBER = 6;
+    static int AGENTS_NUMBER = 100;
     static double STRATEGIC_PERCENTAGE = 0.3;
-    static int NUMBER_OF_ITERATIONS = 20;
+    static int NUMBER_OF_ITERATIONS = 100;
     static int PAUSE_BETWEEN_ITERATIONS = 100;
     static double INTERACTION_RADIUS = 50;
 
