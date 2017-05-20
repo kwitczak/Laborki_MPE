@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.Arrays;
 
 class ReputationAggregationEngine {
@@ -81,9 +82,9 @@ class ReputationAggregationEngine {
         lowTrust = lowAverage / highAverage;
         // highTrust = highAverage / highAverage; // = 1
 
-        System.out.println("clusterizationThreshold: " + clusterizationThreshold );
-        System.out.println("highTrust: " + highTrust );
-        System.out.println("lowTrust: " + lowTrust );
+//        System.out.println("clusterizationThreshold: " + clusterizationThreshold );
+//        System.out.println("highTrust: " + highTrust );
+//        System.out.println("lowTrust: " + lowTrust );
         // checking if agent in high or low trust group
         for (int i = 0; i < Settings.AGENTS_NUMBER; i++) {
 //            System.out.println("reputation avg: " + reputationAvg[i] );
@@ -99,11 +100,18 @@ class ReputationAggregationEngine {
 
     //clusterization using k-means method
     float kmeansClusterization(float[] reputationAvg) {
-        float centerHigh = 0, centerLow = 1;
-        for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
-            if (reputationAvg[i] > centerHigh) centerHigh = reputationAvg[i]; //max value from array
-            if (reputationAvg[i] < centerLow) centerLow = reputationAvg[i]; //min value from array
-        }
+//        float centerHigh = 0, centerLow = 1;
+//        for (int i=0; i < Settings.AGENTS_NUMBER; i++) {
+//            if (reputationAvg[i] > centerHigh) centerHigh = reputationAvg[i]; //max value from array
+//            if (reputationAvg[i] < centerLow) centerLow = reputationAvg[i]; //min value from array
+//        }
+        float centerHigh = 0, centerLow = 0;
+        float[] reputation = reputationAvg.clone();
+        Arrays.sort(reputation);
+        for (int i = 0; i < Settings.AGENTS_NUMBER/2; i++) centerLow += reputation[i];
+        for (int i = Settings.AGENTS_NUMBER/2; i < Settings.AGENTS_NUMBER; i++) centerHigh += reputation[i];
+        centerLow /= Settings.AGENTS_NUMBER/2;
+        centerHigh /= Settings.AGENTS_NUMBER/2;
         boolean wasChange = true;
         boolean[] whereDoIBelong = new boolean[Settings.AGENTS_NUMBER];
         float highMean = 0, lowMean = 0;
